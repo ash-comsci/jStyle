@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>West Ottawa Tourney Swag</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* =============================================
+       TOURNAMENT GEAR — Theme: Red · Black · White
+       ============================================= */
+
+    :root {
+      --red: #D41B2C;
+      --red-dark: #A01020;
+      --red-glow: rgba(212, 27, 44, 0.25);
+      --black: #0a0a0a;
+      --dark: #111111;
+      --dark-2: #1a1a1a;
+      --dark-3: #242424;
+      --white: #f5f5f5;
+      --white-dim: rgba(245,245,245,0.6);
+      --white-faint: rgba(245,245,245,0.08);
+      --border: rgba(255,255,255,0.08);
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-heading: 'Barlow Condensed', sans-serif;
+      --font-body: 'Barlow', sans-serif;
+      --radius: 6px;
+      --transition: 0.25s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* --- Header --- */
+    header {
+      background: var(--dark);
+      border-bottom: 3px solid var(--red);
+      padding: 28px 40px;
+      position: relative;
+      overflow: hidden;
+    }
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 300px; height: 100%;
+      background: radial-gradient(ellipse at right center, var(--red-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .logo { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { font-size: 2rem; filter: drop-shadow(0 0 8px var(--red)); }
+    .logo-text {
+      font-family: var(--font-display);
+      font-size: 2.4rem;
+      letter-spacing: 0.04em;
+      line-height: 1;
+      color: var(--white);
+    }
+    .logo-text .accent { color: var(--red); }
+    .tagline {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+    }
+
+    /* --- Tab Navigation --- */
+    .tab-nav {
+      background: var(--dark-2);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    }
+    .tab-nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tab-nav-inner::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      flex: 1 1 auto;
+      min-width: 160px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: var(--white-dim);
+      cursor: pointer;
+      padding: 18px 20px 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .tab-btn::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 0;
+      background: var(--red-glow);
+      transition: height var(--transition);
+    }
+    .tab-btn:hover { color: var(--white); background: var(--white-faint); }
+    .tab-btn:hover::before { height: 100%; }
+    .tab-btn.active { color: var(--white); border-bottom-color: var(--red); background: var(--white-faint); }
+    .tab-btn.active .tab-number { color: var(--red); }
+
+    .tab-number {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--white-dim);
+      transition: color var(--transition);
+      position: relative;
+      z-index: 1;
+    }
+    .tab-name {
+      font-family: var(--font-heading);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* --- Content Wrapper --- */
+    .content-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px 60px;
+    }
+
+    /* --- Tab Panels --- */
+    .tab-panel { display: none; animation: fadeSlide 0.35s ease forwards; }
+    .tab-panel.active { display: block; }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- Panel Header --- */
+    .panel-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      gap: 20px;
+      flex-wrap: wrap;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .panel-label {
+      font-family: var(--font-heading);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--red);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .panel-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      letter-spacing: 0.02em;
+      line-height: 0.95;
+      color: var(--white);
+    }
+    .panel-subtitle {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--white-dim);
+      margin-top: 8px;
+      letter-spacing: 0.04em;
+    }
+    .panel-badge {
+      background: var(--red);
+      color: var(--white);
+      font-family: var(--font-heading);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 2px;
+      white-space: nowrap;
+      align-self: center;
+      box-shadow: 0 0 18px var(--red-glow);
+    }
+
+    /* --- Hoodie Grid --- */
+    .hoodie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 28px;
+    }
+
+    /* --- Hoodie Card --- */
+    .hoodie-card {
+      background: var(--dark-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+      cursor: pointer;
+    }
+    .hoodie-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 0 1px var(--red);
+      border-color: var(--red);
+    }
+
+    /* --- Image Placeholder --- */
+    .image-placeholder {
+      width: 100%;
+      aspect-ratio: 4/3;
+      background: var(--dark-3);
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .image-placeholder::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 20px,
+        rgba(255,255,255,0.02) 20px,
+        rgba(255,255,255,0.02) 21px
+      );
+    }
+    .placeholder-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      z-index: 1;
+    }
+    .placeholder-icon {
+      font-size: 2.8rem;
+      opacity: 0.35;
+      transition: opacity var(--transition), transform var(--transition);
+    }
+    .hoodie-card:hover .placeholder-icon { opacity: 0.6; transform: scale(1.1); }
+    .placeholder-inner span {
+      font-family: var(--font-heading);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+      background: rgba(212, 27, 44, 0.15);
+      border: 1px dashed rgba(212, 27, 44, 0.4);
+      padding: 5px 12px;
+      border-radius: 2px;
+    }
+
+    /* --- Hoodie Info --- */
+    .hoodie-info { padding: 20px; }
+    .hoodie-tag {
+      display: inline-block;
+      font-family: var(--font-heading);
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--red);
+      background: rgba(212, 27, 44, 0.12);
+      border: 1px solid rgba(212, 27, 44, 0.3);
+      padding: 3px 8px;
+      border-radius: 2px;
+      margin-bottom: 10px;
+    }
+    .hoodie-name {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--white);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+    .hoodie-desc {
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      line-height: 1.6;
+      color: var(--white-dim);
+      margin-bottom: 16px;
+      font-style: italic;
+    }
+    .hoodie-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding-top: 14px;
+      border-top: 1px solid var(--border);
+    }
+    .hoodie-sizes {
+      font-family: var(--font-heading);
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+    }
+    .hoodie-color-dots { display: flex; gap: 6px; align-items: center; }
+    .dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.2);
+      display: inline-block;
+    }
+    .dot.black { background: #111111; border-color: rgba(255,255,255,0.3); }
+    .dot.red   { background: var(--red); border-color: var(--red-dark); }
+    .dot.white { background: var(--white); border-color: rgba(255,255,255,0.6); }
+
+    /* --- Footer --- */
+    footer {
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 24px;
+    }
+    footer p {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--white-dim);
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 768px) {
+      header { padding: 20px; }
+      .header-inner { flex-direction: column; align-items: flex-start; gap: 8px; }
+      .logo-text { font-size: 1.8rem; }
+      .tab-btn { min-width: 120px; padding: 14px 12px 11px; }
+      .tab-name { font-size: 0.68rem; }
+      .content-wrapper { padding: 28px 16px 40px; }
+      .hoodie-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+      .panel-title { font-size: 2.4rem; }
+    }
+    @media (max-width: 480px) {
+      .hoodie-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">West Ottawa · <span class="accent">Tourney Swag</span></span>
+      </div>
+      <p class="tagline"> · Limited Drops · Tournament Exclusives ·</p>
+    </div>
+  </header>
+
+  <!-- Tab Navigation -->
+  <nav class="tab-nav">
+    <div class="tab-nav-inner">
+      <button class="tab-btn active" data-tab="613-showdown">
+        <span class="tab-number">01</span>
+        <span class="tab-name">613 Showdown</span>
+      </button>
+      <button class="tab-btn" data-tab="warrior-classic">
+        <span class="tab-number">02</span>
+        <span class="tab-name">Warrior Classic</span>
+      </button>
+      <button class="tab-btn" data-tab="tourney-2">
+        <span class="tab-number">03</span>
+        <span class="tab-name">Cleats In The Streets</span>
+      </button>
+      <button class="tab-btn" data-tab="thegrind">
+        <span class="tab-number">04</span>
+        <span class="tab-name">The Grind</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Tab Content -->
+  <main class="content-wrapper">
+
+    <!-- ===== 613 SHOWDOWN ===== -->
+    <section class="tab-panel active" id="613-showdown">
+      <div class="panel-header">
+        <div class="panel-title-block">
+          <span class="panel-label">Tournament 01</span>
+          <h2 class="panel-title">613 Showdown</h2>
+          <p class="panel-subtitle">Rep the capital. Own the court.</p>
+        </div>
+        <div class="panel-badge">Limited Edition</div>
+      </div>
+      <div class="hoodie-grid">
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Pullover</div>
+            <h3 class="hoodie-name">613 Classic Pullover</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Black pullover with embroidered 613 Showdown logo on chest, red drawstrings, and tournament year on sleeve ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot black"></span>
+                <span class="dot red"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Zip-Up</div>
+            <h3 class="hoodie-name">613 Elite Zip</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Full zip hoodie with bold 613 graphic down the back, YKK zipper, and two deep front pockets ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot black"></span>
+                <span class="dot white"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Oversized</div>
+            <h3 class="hoodie-name">613 Street Edition</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Oversized drop-shoulder fit, washed black fabric, large back print with tournament bracket design ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot black"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Staff / VIP</div>
+            <h3 class="hoodie-name">613 Staff Hoodie</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Exclusive staff colorway in red with white lettering, "STAFF" on back, tournament crest on chest ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot red"></span>
+                <span class="dot white"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== WARRIOR CLASSIC ===== -->
+    <section class="tab-panel" id="warrior-classic">
+      <div class="panel-header">
+        <div class="panel-title-block">
+          <span class="panel-label">Tournament 02</span>
+          <h2 class="panel-title">Warrior Classic</h2>
+          <p class="panel-subtitle">Built for warriors. Worn with pride.</p>
+        </div>
+        <div class="panel-badge">Limited Edition</div>
+      </div>
+      <div class="hoodie-grid">
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Pullover</div>
+            <h3 class="hoodie-name">Warrior Crest Pullover</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Premium heavyweight pullover with warrior crest embroidery on left chest, contrast stitching on hood ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot black"></span>
+                <span class="dot red"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Zip-Up</div>
+            <h3 class="hoodie-name">Warrior Zip Pro</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Slim-fit zip hoodie, ribbed cuffs, screen-printed warrior graphic across the shoulders ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot black"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Youth</div>
+            <h3 class="hoodie-name">Warrior Youth Cut</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Youth sizing, soft fleece interior, mini warrior logo on chest, same design as adult versions ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: YS – YXL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot black"></span>
+                <span class="dot white"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Coach Edition</div>
+            <h3 class="hoodie-name">Warrior Coach Hoodie</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. White hoodie with bold red "COACH" lettering on back, Warrior Classic logo on front, soft shell exterior ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot white"></span>
+                <span class="dot red"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== TOURNEY 2 ===== -->
+    <section class="tab-panel" id="tourney-2">
+      <div class="panel-header">
+        <div class="panel-title-block">
+          <span class="panel-label">cleats in the streets</span>
+          <h2 class="panel-title">Cleats In The Streets</h2>
+          <p class="panel-subtitle">Second season. Stronger statement.</p>
+        </div>
+        <div class="panel-badge">Limited Edition</div>
+      </div>
+      <div class="hoodie-grid">
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Pullover</div>
+            <h3 class="hoodie-name">T2 Core Pullover</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Midweight pullover, Tourney 2 arc logo on chest, bold number "2" graphic on back, kangaroo pocket ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot black"></span>
+                <span class="dot red"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Zip-Up</div>
+            <h3 class="hoodie-name">T2 Zip Fleece</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Polar fleece zip hoodie with Tourney 2 embroidered patch on sleeve, clean minimal chest logo ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot black"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Special Colorway</div>
+            <h3 class="hoodie-name">T2 Special Edition</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Special edition colorway, red and black dip-dye effect, Tourney 2 logo in white on chest ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot red"></span>
+                <span class="dot black"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Champion Cut</div>
+            <h3 class="hoodie-name">T2 Champion Hoodie</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Champion-only black hoodie, custom champion badge on chest, premium satin-feel lining ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot black"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== TOURNEY 4 ===== -->
+    <section class="tab-panel" id="tourney-4">
+      <div class="panel-header">
+        <div class="panel-title-block">
+          <span class="panel-label">The Grind</span>
+          <h2 class="panel-title">The Grind</h2>
+          <p class="panel-subtitle">The fourth. The fiercest. The finest.</p>
+        </div>
+        <div class="panel-badge">Limited Edition</div>
+      </div>
+      <div class="hoodie-grid">
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Pullover</div>
+            <h3 class="hoodie-name">T4 Signature Pullover</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Heavyweight cotton pullover, large "IV" Roman numeral back print, Tourney 4 wordmark on chest in red ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot black"></span>
+                <span class="dot red"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Zip-Up</div>
+            <h3 class="hoodie-name">T4 Apex Zip</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Premium full-zip with adjustable hood, white contrast zip tape, T4 logo embroidered on left sleeve ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot black"></span>
+                <span class="dot white"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Women's Cut</div>
+            <h3 class="hoodie-name">T4 Women's Edition</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Women's fitted cut, cropped length option, T4 logo in white on black or black on white, soft brushed fleece ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: XS – 2XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot black"></span>
+                <span class="dot white"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hoodie-card">
+          <div class="image-placeholder">
+            <div class="placeholder-inner">
+              <div class="placeholder-icon">👕</div>
+              <span>Add Your Image Here</span>
+            </div>
+          </div>
+          <div class="hoodie-info">
+            <div class="hoodie-tag">Collector's</div>
+            <h3 class="hoodie-name">T4 Legacy Hoodie</h3>
+            <p class="hoodie-desc">[ Describe this hoodie — e.g. Collector's edition with all four tournament logos on back, numbered edition tag inside, premium packaging ]</p>
+            <div class="hoodie-meta">
+              <span class="hoodie-sizes">Sizes: S – 3XL</span>
+              <span class="hoodie-color-dots">
+                <span class="dot black"></span>
+                <span class="dot red"></span>
+                <span class="dot white"></span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>© 2025 Tournament Gear &nbsp;·&nbsp; All hoodies are limited edition tournament exclusives.</p>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      const tabPanels  = document.querySelectorAll('.tab-panel');
+
+      function activateTab(targetId) {
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        tabPanels.forEach(panel => {
+          panel.classList.remove('active');
+          panel.style.display = 'none';
+        });
+
+        const activeBtn = document.querySelector(`.tab-btn[data-tab="${targetId}"]`);
+        if (activeBtn) activeBtn.classList.add('active');
+
+        const activePanel = document.getElementById(targetId);
+        if (activePanel) {
+          activePanel.style.display = 'block';
+          void activePanel.offsetWidth; // restart animation
+          activePanel.classList.add('active');
+        }
+
+        history.replaceState(null, '', `#${targetId}`);
+      }
+
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', function () {
+          activateTab(this.getAttribute('data-tab'));
+        });
+      });
+
+      const initialHash = window.location.hash.replace('#', '');
+      const validIds = Array.from(tabPanels).map(p => p.id);
+      if (initialHash && validIds.includes(initialHash)) {
+        activateTab(initialHash);
+      } else {
+        activateTab(tabButtons[0].getAttribute('data-tab'));
+      }
+    });
+  </script>
+
+</body>
+</html>
