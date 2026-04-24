@@ -301,13 +301,21 @@ header::before {
 /* --- Image Placeholder --- */
 .image-placeholder {
   width: 100%;
-  aspect-ratio: 4/3;
+  aspect-ratio: 4/3; /* Keeps all cards uniform regardless of image shape */
   background: var(--dark-3);
   border-bottom: 1px solid var(--border);
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
+.image-placeholder img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Crops the image to fill the space without stretching */
+  display: block;
+}
 .image-placeholder::after {
   content: '';
   position: absolute;
@@ -330,6 +338,7 @@ header::before {
   justify-content: center;
   gap: 10px;
   z-index: 1;
+  pointer-events: none; /* Allows clicks to pass through to the image if needed */
 }
 
 .placeholder-icon {
