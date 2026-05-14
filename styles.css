@@ -13,6 +13,17 @@
   margin: 0 auto;
   transition: transform 0.4s ease;
 }
+.product-card {
+  text-align: center;
+}
+
+.product-card img {
+  width: 20%;
+  height: auto;
+  margin: 20px auto;
+  display: block;
+  transition: transform 0.4s ease;
+}
 body {
   background-color: #111;
   color: white;
