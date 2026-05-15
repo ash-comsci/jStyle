@@ -16,7 +16,6 @@
 }
 .product-card {
   text-align: center;
-  height: 30vh;
 }
 
 .product-card img {
@@ -165,7 +164,6 @@ nav a:hover {
   background: #161616;
   padding: 60px 8%;
   text-align: center;
-  height: 20vh;
 }
 
 .about-section h2 {
