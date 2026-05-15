@@ -8,8 +8,8 @@
   
 }
 .large-image-container img {
-  width: 50%;
-  height: auto;
+  width: auto;
+  height: 75%;
   display: block;
   margin: 0 auto;
   transition: transform 0.4s ease;
