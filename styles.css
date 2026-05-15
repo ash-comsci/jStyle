@@ -8,12 +8,25 @@
   
 }
 .large-image-container img {
-  width: auto;
-  height: 700px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* CRITICAL: Ensures the entire shirt fits within the box without distortion */
   display: block;
   margin: 0 auto;
   transition: transform 0.4s ease;
 }
+
+/* Target the container */
+.large-image-container {
+  height: 75vh; /* Forces the container to be exactly 75% of the screen height */
+  width: 100%; /* Ensures it takes up the full width of its parent section */
+  display: flex; /* Flexbox is perfect for centering the image perfectly */
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* Prevents the image from spilling out */
+  background-color: #f4f4f4; /* Optional: A light gray background makes product images pop */
+}
+
 .product-card {
   text-align: center;
 }
