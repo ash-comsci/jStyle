@@ -16,6 +16,7 @@
 }
 .product-card {
   text-align: center;
+  height: 30vh;
 }
 
 .product-card img {
