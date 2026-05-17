@@ -7,6 +7,20 @@
   font-family: Arial, Helvetica, sans-serif;
   
 }
+
+.responsive-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Desktop adjustments */
+@media (min-width: 768px) {
+  .responsive-img {
+    max-width: 600px; /* adjust to how big you want */
+    margin: 0 auto;   /* centers the image */
+  }
+}
 .large-image-container img {
   width: 100%;
   height: 100%;
