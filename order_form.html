@@ -650,116 +650,146 @@
 
   /* ════════════ BUILD HTML EMAIL ════════════ */
   function buildEmailHTML(fname, lname, email, notes, orderRows, grandTotal) {
-    const now = new Date().toLocaleString("en-CA", { dateStyle: "long", timeStyle: "short" });
 
-    const productSections = orderRows.map(({ name, items, subtotal }) => {
-      const rows = items.map(({ size, qty }) => `
-        <tr>
-          <td style="padding:10px 16px;border-bottom:1px solid #2a2a2a;color:#f0ece4;font-size:14px;">${size}</td>
-          <td style="padding:10px 16px;border-bottom:1px solid #2a2a2a;color:#d72323;font-size:16px;font-weight:700;text-align:right;">×${qty}</td>
-        </tr>`).join("");
+const now = new Date().toLocaleString("en-CA", { dateStyle: "long", timeStyle: "short" });
 
-      return `
-      <div style="margin-bottom:20px;border-radius:6px;overflow:hidden;border:1px solid #2a2a2a;">
-        <div style="background:#1a1a1a;padding:12px 16px;border-bottom:2px solid #d72323;display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-family:Georgia,serif;font-size:15px;font-weight:700;color:#f0ece4;letter-spacing:1px;text-transform:uppercase;">${name}</span>
-          <span style="background:#d72323;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:3px;letter-spacing:2px;">${subtotal} ITEM${subtotal !== 1 ? "S" : ""}</span>
-        </div>
-        <table width="100%" cellpadding="0" cellspacing="0" style="background:#111111;">
-          ${rows}
-        </table>
-      </div>`;
-    }).join("");
+const productSections = orderRows.map(({ name, items, subtotal }) => {
+const rows = items.map(({ size, qty }) => `
+<tr>
+<td style="padding:10px 16px;border-bottom:1px solid #ddd;color:#111;font-size:14px;">
+${size}
+</td>
+<td style="padding:10px 16px;border-bottom:1px solid #ddd;color:#d72323;font-size:16px;font-weight:700;text-align:right;">
+×${qty}
+</td>
+</tr>`).join("");
 
-    const notesRow = notes ? `
-      <tr>
-        <td style="padding:8px 0;color:#999;font-size:13px;width:140px;">Name for Back</td>
-        <td style="padding:8px 0;color:#f0ece4;font-size:13px;">${notes}</td>
-      </tr>` : "";
+return `
+<div style="margin-bottom:20px;border-radius:6px;overflow:hidden;border:1px solid #ddd;">
+<div style="background:#ffffff;padding:12px 16px;border-bottom:2px solid #d72323;display:flex;justify-content:space-between;">
+<span style="font-size:14px;font-weight:700;color:#111;text-transform:uppercase;">
+${name}
+</span>
+<span style="background:#d72323;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:3px;">
+${subtotal} ITEM${subtotal !== 1 ? "S" : ""}
+</span>
+</div>
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#fff;">
+${rows}
+</table>
+</div>`;
+}).join("");
 
-    return `
+const notesRow = notes ? `
+<tr>
+<td style="padding:8px 0;color:#666;font-size:13px;width:140px;">
+Name for Back
+</td>
+<td style="padding:8px 0;color:#111;font-size:13px;">
+${notes}
+</td>
+</tr>` : "";
+
+return `
 <!DOCTYPE html>
 <html>
 <head><meta charset="UTF-8"/></head>
-<body style="margin:0;padding:0;background:#0d0d0d;font-family:Georgia,serif;">
 
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0d0d0d;padding:40px 20px;">
-    <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+<body style="margin:0;padding:0;background:#ffffff;font-family:Arial,sans-serif;">
 
-        <!-- HEADER -->
-        <tr>
-          <td style="background:linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%);border-top:4px solid #d72323;border-radius:8px 8px 0 0;padding:36px 40px;text-align:center;">
-            <div style="font-size:11px;letter-spacing:6px;color:#d72323;margin-bottom:10px;font-family:Arial,sans-serif;">JSTYLES</div>
-            <div style="font-size:36px;font-weight:700;color:#f0ece4;letter-spacing:2px;line-height:1.1;">NEW ORDER<br/><span style="color:#d72323;">RECEIVED</span></div>
-            <div style="margin-top:14px;width:40px;height:2px;background:#d72323;margin-left:auto;margin-right:auto;"></div>
-          </td>
-        </tr>
+<table width="100%" cellpadding="0" cellspacing="0" style="padding:30px;">
 
-        <!-- CUSTOMER INFO -->
-        <tr>
-          <td style="background:#161616;border-left:1px solid #2a2a2a;border-right:1px solid #2a2a2a;padding:28px 40px;">
-            <div style="font-size:10px;letter-spacing:5px;color:#d72323;margin-bottom:16px;font-family:Arial,sans-serif;">CUSTOMER INFORMATION</div>
-            <table width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td style="padding:8px 0;color:#999;font-size:13px;width:140px;font-family:Arial,sans-serif;">Full Name</td>
-                <td style="padding:8px 0;color:#f0ece4;font-size:13px;font-family:Arial,sans-serif;">${fname} ${lname}</td>
-              </tr>
-              <tr>
-                <td style="padding:8px 0;color:#999;font-size:13px;font-family:Arial,sans-serif;">Email</td>
-                <td style="padding:8px 0;font-size:13px;font-family:Arial,sans-serif;"><a href="mailto:${email}" style="color:#d72323;">${email}</a></td>
-              </tr>
-              <tr>
-                <td style="padding:8px 0;color:#999;font-size:13px;font-family:Arial,sans-serif;">Date</td>
-                <td style="padding:8px 0;color:#f0ece4;font-size:13px;font-family:Arial,sans-serif;">${now}</td>
-              </tr>
-              ${notesRow}
-            </table>
-          </td>
-        </tr>
+<tr>
+<td align="center">
 
-        <!-- DIVIDER -->
-        <tr>
-          <td style="background:#d72323;height:2px;"></td>
-        </tr>
+<table width="600" style="max-width:600px;width:100%;border:1px solid #ddd;">
 
-        <!-- ORDER DETAILS -->
-        <tr>
-          <td style="background:#121212;border-left:1px solid #2a2a2a;border-right:1px solid #2a2a2a;padding:28px 40px;">
-            <div style="font-size:10px;letter-spacing:5px;color:#d72323;margin-bottom:20px;font-family:Arial,sans-serif;">ORDER DETAILS</div>
-            ${productSections}
-          </td>
-        </tr>
+<!-- HEADER -->
+<tr>
+<td style="background:#ffffff;border-top:4px solid #d72323;padding:32px;text-align:center;">
+<div style="font-size:11px;letter-spacing:4px;color:#d72323;margin-bottom:10px;">
+JSTYLES
+</div>
+<div style="font-size:30px;font-weight:700;color:#111;">
+NEW ORDER<br><span style="color:#d72323;">RECEIVED</span>
+</div>
+</td>
+</tr>
 
-        <!-- GRAND TOTAL -->
-        <tr>
-          <td style="background:#1a1a1a;border:1px solid #2a2a2a;border-top:none;border-radius:0 0 8px 8px;padding:24px 40px;">
-            <table width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td style="color:#999;font-size:13px;font-family:Arial,sans-serif;letter-spacing:2px;">GRAND TOTAL</td>
-                <td style="text-align:right;">
-                  <span style="background:#d72323;color:#fff;font-size:22px;font-weight:700;padding:6px 20px;border-radius:4px;font-family:Arial,sans-serif;">${grandTotal} ITEMS</span>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
+<!-- CUSTOMER INFO -->
+<tr>
+<td style="background:#ffffff;padding:24px 32px;">
+<div style="font-size:11px;letter-spacing:3px;color:#d72323;margin-bottom:14px;">
+CUSTOMER INFORMATION
+</div>
 
-        <!-- FOOTER -->
-        <tr>
-          <td style="padding:24px 40px;text-align:center;">
-            <p style="color:#444;font-size:12px;font-family:Arial,sans-serif;margin:0;">This order was submitted via the jStyles online order form.</p>
-            <p style="margin:8px 0 0;font-family:Arial,sans-serif;"><a href="mailto:${email}" style="color:#d72323;font-size:12px;">Reply to ${email} to confirm</a></p>
-          </td>
-        </tr>
+<table width="100%">
+<tr>
+<td style="padding:6px 0;color:#666;width:140px;">Full Name</td>
+<td style="padding:6px 0;color:#111;">${fname} ${lname}</td>
+</tr>
 
-      </table>
-    </td></tr>
-  </table>
+<tr>
+<td style="padding:6px 0;color:#666;">Email</td>
+<td style="padding:6px 0;">
+<a href="mailto:${email}" style="color:#dtd>
+<td style="padding:6px 0;color:#111;">${now}</td>
+</tr>
+
+${notesRow}
+</table>
+</td>
+</tr>
+
+<!-- DIVIDER -->
+<tr>
+<td style="background:#d72323;height:2px;"></td>
+</tr>
+
+<!-- ORDER -->
+<tr>
+<td style="padding:24px 32px;background:#ffffff;">
+<div style="font-size:11px;letter-spacing:3px;color:#d72323;margin-bottom:18px;">
+ORDER DETAILS
+</div>
+
+${productSections}
+</td>
+</tr>
+
+<!-- TOTAL -->
+<tr>
+<td style="padding:20px 32px;background:#fafafa;border-top:1px solid #ddd;">
+<table width="100%">
+<tr>
+<td style="color:#666;font-size:12px;">GRAND TOTAL</td>
+<td style="text-align:right;">
+<span style="background:#d72323;color:#fff;font-size:20px;font-weight:700;padding:6px 18px;border-radius:4px;">
+${grandTotal} ITEMS
+</span>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+
+<!-- FOOTER -->
+<tr>
+<td style="padding:20px;text-align:center;">
+<p style="color:#777;font-size:12px;margin:0;">
+Submitted via jStyles order form
+</p>
+<p style="margin-top:6px;">
+<a href="mailto:${email}" style="color:#d72323;font-size:/table>
+
+</td>
+</tr>
+</table>
 
 </body>
 </html>`;
-  }
+}
+
 
   /* ════════════ SUBMIT ════════════ */
   async function submitOrder() {
