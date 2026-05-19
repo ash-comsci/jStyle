@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Order Form</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <style>
     :root {
       --black:   #0a0a0a;
@@ -70,6 +71,12 @@
       margin-bottom: 14px;
       display: block;
     }
+        .header h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      line-height: .92;
+      letter-spacing: 2px;
+    }
     .header h1 {
       font-family: 'Bebas Neue', sans-serif;
       font-size: clamp(52px, 9vw, 88px);
@@ -80,7 +87,7 @@
     .header p {
       margin-top: 16px;
       font-size: 13.5px;
-      color: var(--red);
+      color: var(--black);
       max-width: 400px;
       margin-left: auto;
       margin-right: auto;
@@ -548,6 +555,25 @@
   const YOUTH_SIZES = ["Youth S","Youth M","Youth L","Youth XL"];
   const ADULT_SIZES = ["Adult XS","Adult S","Adult M","Adult L","Adult XL","Adult XXL","Adult XXXL"];
 
+  /* ════════════════════════════════════════════════════
+     EMAILJS CONFIG
+     ─────────────────────────────────────────────────
+     1. Go to https://www.emailjs.com and create a free account
+     2. Add an Email Service (Gmail recommended) → copy the Service ID
+     3. Create a Template — paste ONLY this in the template body:
+            {{{html_body}}}
+        Set "To Email" = scottyjamieson29@gmail.com
+        Set "Subject"  = {{subject}}
+        → Copy the Template ID
+     4. Go to Account → API Keys → copy your Public Key
+     5. Paste all three values below
+  ════════════════════════════════════════════════════ */
+  const EMAILJS_PUBLIC_KEY  = "t0ZhDWn8N6TciIGFA";   // ← replace
+  const EMAILJS_SERVICE_ID  = "service_qpb17yf";   // ← replace
+  const EMAILJS_TEMPLATE_ID = "template_m8v30a6";  // ← replace
+
+  emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+
   /* ════════════ BUILD COUNTERS ════════════ */
   document.querySelectorAll(".product-card").forEach((card, cardIdx) => {
     card.querySelectorAll(".size-grid").forEach(grid => {
@@ -566,8 +592,6 @@
         grid.appendChild(row);
       });
     });
-
-    // open all cards by default
     const body = card.querySelector(".product-body");
     body.style.maxHeight = body.scrollHeight + "px";
   });
@@ -579,12 +603,10 @@
     const cur = counts[id] || 0;
     const next = Math.max(0, cur + delta);
     counts[id] = next;
-
     const valEl = document.getElementById("val_" + id);
     valEl.textContent = next;
     valEl.classList.toggle("nonzero", next > 0);
     valEl.closest(".size-row").classList.toggle("active", next > 0);
-
     refreshBadges();
     refreshTotal();
   }
@@ -614,7 +636,6 @@
     const card = header.closest(".product-card");
     const body = card.querySelector(".product-body");
     const isCollapsed = card.classList.contains("collapsed");
-
     if (isCollapsed) {
       card.classList.remove("collapsed");
       body.style.maxHeight = body.scrollHeight + "px";
@@ -627,8 +648,121 @@
     }
   }
 
-  /* ════════════ SUBMIT / EMAIL ════════════ */
-  function submitOrder() {
+  /* ════════════ BUILD HTML EMAIL ════════════ */
+  function buildEmailHTML(fname, lname, email, notes, orderRows, grandTotal) {
+    const now = new Date().toLocaleString("en-CA", { dateStyle: "long", timeStyle: "short" });
+
+    const productSections = orderRows.map(({ name, items, subtotal }) => {
+      const rows = items.map(({ size, qty }) => `
+        <tr>
+          <td style="padding:10px 16px;border-bottom:1px solid #2a2a2a;color:#f0ece4;font-size:14px;">${size}</td>
+          <td style="padding:10px 16px;border-bottom:1px solid #2a2a2a;color:#d72323;font-size:16px;font-weight:700;text-align:right;">×${qty}</td>
+        </tr>`).join("");
+
+      return `
+      <div style="margin-bottom:20px;border-radius:6px;overflow:hidden;border:1px solid #2a2a2a;">
+        <div style="background:#1a1a1a;padding:12px 16px;border-bottom:2px solid #d72323;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-family:Georgia,serif;font-size:15px;font-weight:700;color:#f0ece4;letter-spacing:1px;text-transform:uppercase;">${name}</span>
+          <span style="background:#d72323;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:3px;letter-spacing:2px;">${subtotal} ITEM${subtotal !== 1 ? "S" : ""}</span>
+        </div>
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#111111;">
+          ${rows}
+        </table>
+      </div>`;
+    }).join("");
+
+    const notesRow = notes ? `
+      <tr>
+        <td style="padding:8px 0;color:#999;font-size:13px;width:140px;">Name for Back</td>
+        <td style="padding:8px 0;color:#f0ece4;font-size:13px;">${notes}</td>
+      </tr>` : "";
+
+    return `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"/></head>
+<body style="margin:0;padding:0;background:#0d0d0d;font-family:Georgia,serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0d0d0d;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+        <!-- HEADER -->
+        <tr>
+          <td style="background:linear-gradient(135deg,#1a1a1a 0%,#0f0f0f 100%);border-top:4px solid #d72323;border-radius:8px 8px 0 0;padding:36px 40px;text-align:center;">
+            <div style="font-size:11px;letter-spacing:6px;color:#d72323;margin-bottom:10px;font-family:Arial,sans-serif;">JSTYLES</div>
+            <div style="font-size:36px;font-weight:700;color:#f0ece4;letter-spacing:2px;line-height:1.1;">NEW ORDER<br/><span style="color:#d72323;">RECEIVED</span></div>
+            <div style="margin-top:14px;width:40px;height:2px;background:#d72323;margin-left:auto;margin-right:auto;"></div>
+          </td>
+        </tr>
+
+        <!-- CUSTOMER INFO -->
+        <tr>
+          <td style="background:#161616;border-left:1px solid #2a2a2a;border-right:1px solid #2a2a2a;padding:28px 40px;">
+            <div style="font-size:10px;letter-spacing:5px;color:#d72323;margin-bottom:16px;font-family:Arial,sans-serif;">CUSTOMER INFORMATION</div>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="padding:8px 0;color:#999;font-size:13px;width:140px;font-family:Arial,sans-serif;">Full Name</td>
+                <td style="padding:8px 0;color:#f0ece4;font-size:13px;font-family:Arial,sans-serif;">${fname} ${lname}</td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0;color:#999;font-size:13px;font-family:Arial,sans-serif;">Email</td>
+                <td style="padding:8px 0;font-size:13px;font-family:Arial,sans-serif;"><a href="mailto:${email}" style="color:#d72323;">${email}</a></td>
+              </tr>
+              <tr>
+                <td style="padding:8px 0;color:#999;font-size:13px;font-family:Arial,sans-serif;">Date</td>
+                <td style="padding:8px 0;color:#f0ece4;font-size:13px;font-family:Arial,sans-serif;">${now}</td>
+              </tr>
+              ${notesRow}
+            </table>
+          </td>
+        </tr>
+
+        <!-- DIVIDER -->
+        <tr>
+          <td style="background:#d72323;height:2px;"></td>
+        </tr>
+
+        <!-- ORDER DETAILS -->
+        <tr>
+          <td style="background:#121212;border-left:1px solid #2a2a2a;border-right:1px solid #2a2a2a;padding:28px 40px;">
+            <div style="font-size:10px;letter-spacing:5px;color:#d72323;margin-bottom:20px;font-family:Arial,sans-serif;">ORDER DETAILS</div>
+            ${productSections}
+          </td>
+        </tr>
+
+        <!-- GRAND TOTAL -->
+        <tr>
+          <td style="background:#1a1a1a;border:1px solid #2a2a2a;border-top:none;border-radius:0 0 8px 8px;padding:24px 40px;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="color:#999;font-size:13px;font-family:Arial,sans-serif;letter-spacing:2px;">GRAND TOTAL</td>
+                <td style="text-align:right;">
+                  <span style="background:#d72323;color:#fff;font-size:22px;font-weight:700;padding:6px 20px;border-radius:4px;font-family:Arial,sans-serif;">${grandTotal} ITEMS</span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- FOOTER -->
+        <tr>
+          <td style="padding:24px 40px;text-align:center;">
+            <p style="color:#444;font-size:12px;font-family:Arial,sans-serif;margin:0;">This order was submitted via the jStyles online order form.</p>
+            <p style="margin:8px 0 0;font-family:Arial,sans-serif;"><a href="mailto:${email}" style="color:#d72323;font-size:12px;">Reply to ${email} to confirm</a></p>
+          </td>
+        </tr>
+
+      </table>
+    </td></tr>
+  </table>
+
+</body>
+</html>`;
+  }
+
+  /* ════════════ SUBMIT ════════════ */
+  async function submitOrder() {
     const fname = document.getElementById("fname").value.trim();
     const lname = document.getElementById("lname").value.trim();
     const email = document.getElementById("email").value.trim();
@@ -645,63 +779,53 @@
       return;
     }
 
-    const subject = `New jStyles Order — ${fname} ${lname}`;
-
-    const divider = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━";
-    const thin    = "────────────────────────────────────────";
-    const now     = new Date().toLocaleString("en-CA", { dateStyle:"long", timeStyle:"short" });
-
-    let body = "";
-    body += `ORDER RECEIVED\n`;
-    body += `${divider}\n\n`;
-    body += `Date Submitted : ${now}\n`;
-    body += `Customer Name  : ${fname} ${lname}\n`;
-    body += `Customer Email : ${email}\n`;
-    if (notes) body += `Name for Back  : ${notes}\n`;
-    body += `\n${divider}\n`;
-    body += `ORDER DETAILS\n`;
-    body += `${divider}\n\n`;
-
+    // Collect order data
+    const orderRows = [];
     let grandTotal = 0;
 
     document.querySelectorAll(".product-card").forEach((card, cardIdx) => {
-      const productName = card.dataset.product;
-      const productItems = [];
-
+      const items = [];
       [...YOUTH_SIZES, ...ADULT_SIZES].forEach(size => {
-        const key = `${cardIdx}_${size.replace(/\s/g,"_")}`;
-        const qty = counts[key] || 0;
-        if (qty > 0) productItems.push({ size, qty });
+        const qty = counts[`${cardIdx}_${size.replace(/\s/g,"_")}`] || 0;
+        if (qty > 0) items.push({ size, qty });
       });
-
-      if (productItems.length === 0) return;
-
-      const productTotal = productItems.reduce((s,r) => s + r.qty, 0);
-      grandTotal += productTotal;
-
-      body += `▸  ${productName.toUpperCase()}\n`;
-      body += `${thin}\n`;
-      productItems.forEach(({ size, qty }) => {
-        const pad = size.padEnd(16, " ");
-        body += `   ${pad}  ×  ${qty}\n`;
-      });
-      body += `   ${"Subtotal".padEnd(16, " ")}     ${productTotal} item${productTotal !== 1 ? "s" : ""}\n`;
-      body += `\n`;
+      if (!items.length) return;
+      const subtotal = items.reduce((s,r) => s + r.qty, 0);
+      grandTotal += subtotal;
+      orderRows.push({ name: card.dataset.product, items, subtotal });
     });
 
-    body += `${divider}\n`;
-    body += `GRAND TOTAL    :  ${grandTotal} item${grandTotal !== 1 ? "s" : ""}\n`;
-    body += `${divider}\n\n`;
-    body += `This order was submitted via the jStyles online order form.\n`;
-    body += `Please reply to ${email} to confirm the order.\n`;
+    // Check if EmailJS is configured
+    if (EMAILJS_PUBLIC_KEY === "YOUR_PUBLIC_KEY") {
+      showToast("⚠ Add your EmailJS keys to enable sending.", true);
+      console.log("Order data:", { fname, lname, email, notes, orderRows, grandTotal });
+      return;
+    }
 
-    const mailto = `mailto:scottyjamieson29@gmail.com`
-      + `?subject=${encodeURIComponent(subject)}`
-      + `&body=${encodeURIComponent(body)}`;
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    btn.textContent = "SENDING…";
 
-    window.location.href = mailto;
+    try {
+      const htmlBody = buildEmailHTML(fname, lname, email, notes, orderRows, grandTotal);
 
-    showToast("✓ Opening your email client with the order summary…");
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+        subject:   `New jStyles Order — ${fname} ${lname}`,
+        html_body: htmlBody,
+        to_email:  "scottyjamieson29@gmail.com",
+        from_name: `${fname} ${lname}`,
+        reply_to:  email,
+      });
+
+      showToast("✓ Order sent successfully!");
+      document.getElementById("responseForm") && document.getElementById("responseForm").reset();
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      showToast("Send failed — check your EmailJS keys.", true);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "SEND ORDER →";
+    }
   }
 
   /* ════════════ TOAST ════════════ */
