@@ -544,7 +544,10 @@
 
 <!-- ══ STICKY BAR ══ -->
 <div class="summary-bar">
-  <div class="summary-count">TOTAL ITEMS <span id="total-count">0</span></div>
+<div class="summary-count">
+  ITEMS <span id="total-count">0</span> • 
+  TOTAL <span id="total-cost">$0</span>
+</div>
   <button class="btn-submit" id="submitBtn" onclick="submitOrder()">SEND ORDER →</button>
 </div>
 
@@ -554,6 +557,16 @@
   /* ════════════ SIZE DATA ════════════ */
   const YOUTH_SIZES = ["Youth S","Youth M","Youth L","Youth XL"];
   const ADULT_SIZES = ["Adult XS","Adult S","Adult M","Adult L","Adult XL","Adult XXL","Adult XXXL"];
+
+  const PRICES = {
+  "Pullover Hoodie": 50,
+  "Sideline Tee": 25,
+  "WOMENS Tank Top": 25,
+  "MENS Tank Top": 25,
+  "Ball Cap $25": 25,
+  "Quarter-Zip": 30
+};
+
 
   /* ════════════════════════════════════════════════════
      EMAILJS CONFIG
@@ -626,10 +639,29 @@
       .reduce((s,[,v]) => s + v, 0);
   }
 
-  function refreshTotal() {
-    const t = Object.values(counts).reduce((s,v) => s+v, 0);
-    document.getElementById("total-count").textContent = t;
-  }
+function refreshTotal() {
+let totalItems = 0;
+let totalCost = 0;
+
+document.querySelectorAll(".product-card").forEach((card, cardIdx) => {
+  const productName = card.dataset.product;
+  const price = PRICES[productName] || 0;
+
+  let subtotal = 0;
+
+  Object.entries(counts).forEach(([key, val]) => {
+    if (key.startsWith(cardIdx + "_")) {
+      subtotal += val;
+    }
+  });
+
+  totalItems += subtotal;
+  totalCost += subtotal * price;
+});
+
+document.getElementById("total-count").textContent = totalItems;
+document.getElementById("total-cost").textContent = `$${totalCost}`;
+}
 
   /* ════════════ COLLAPSE / EXPAND ════════════ */
   function toggleCard(header) {
@@ -649,138 +681,135 @@
   }
 
   /* ════════════ BUILD HTML EMAIL ════════════ */
-  function buildEmailHTML(fname, lname, email, notes, orderRows, grandTotal) {
+ function buildEmailHTML(fname, lname, email, notes, orderRows, grandTotal) {
 
 const now = new Date().toLocaleString("en-CA", { dateStyle: "long", timeStyle: "short" });
 
+/* ✅ PRICING MAP */
+function getPrice(productName) {
+if (productName.includes("Hoodie")) return 50;
+if (productName.includes("Sideline Tee")) return 25;
+if (productName.includes("Tank")) return 25;
+if (productName.includes("Ball Cap")) return 25;
+if (productName.includes("Quarter-Zip")) return 30;
+return 0;
+}
+
+let grandTotalCost = 0;
+
 const productSections = orderRows.map(({ name, items, subtotal }) => {
+
+const price = getPrice(name);
+const sectionTotal = subtotal * price;
+grandTotalCost += sectionTotal;
+
 const rows = items.map(({ size, qty }) => `
 <tr>
 <td style="padding:10px 16px;border-bottom:1px solid #ddd;color:#111;font-size:14px;">
 ${size}
 </td>
-<td style="padding:10px 16px;border-bottom:1px solid #ddd;color:#d72323;font-size:16px;font-weight:700;text-align:right;">
+<td style="padding:10px 16px;border-bottom:1px solid #ddd;color:#d72323;text-align:right;">
 ×${qty}
 </td>
 </tr>`).join("");
 
 return `
 <div style="margin-bottom:20px;border-radius:6px;overflow:hidden;border:1px solid #ddd;">
+
 <div style="background:#ffffff;padding:12px 16px;border-bottom:2px solid #d72323;display:flex;justify-content:space-between;">
 <span style="font-size:14px;font-weight:700;color:#111;text-transform:uppercase;">
 ${name}
 </span>
-<span style="background:#d72323;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:3px;">
-${subtotal} ITEM${subtotal !== 1 ? "S" : ""}
+
+<span style="font-size:12px;font-weight:700;color:#d72323;">
+${subtotal} ITEMS • $${sectionTotal}
 </span>
 </div>
-<table width="100%" cellpadding="0" cellspacing="0" style="background:#fff;">
+
+<table width="100%" cellspacing="0">
 ${rows}
 </table>
+
 </div>`;
 }).join("");
 
 const notesRow = notes ? `
 <tr>
-<td style="padding:8px 0;color:#666;font-size:13px;width:140px;">
-Name for Back
-</td>
-<td style="padding:8px 0;color:#111;font-size:13px;">
-${notes}
-</td>
+<td style="padding:8px 0;color:#666;width:140px;">Name for Back</td>
+<td style="padding:8px 0;color:#111;">${notes}</td>
 </tr>` : "";
 
 return `
 <!DOCTYPE html>
 <html>
-<head><meta charset="UTF-8"/></head>
+<body style="margin:0;background:#fff;font-family:Arial,sans-serif;">
 
-<body style="margin:0;padding:0;background:#ffffff;font-family:Arial,sans-serif;">
-
-<table width="100%" cellpadding="0" cellspacing="0" style="padding:30px;">
-
+<table width="100%" style="padding:30px;">
 <tr>
 <td align="center">
 
-<table width="600" style="max-width:600px;width:100%;border:1px solid #ddd;">
+<table width="600" style="border:1px solid #ddd;">
 
 <!-- HEADER -->
 <tr>
-<td style="background:#ffffff;border-top:4px solid #d72323;padding:32px;text-align:center;">
-<div style="font-size:11px;letter-spacing:4px;color:#d72323;margin-bottom:10px;">
-JSTYLES
-</div>
-<div style="font-size:30px;font-weight:700;color:#111;">
+<td style="border-top:4px solid #d72323;padding:30px;text-align:center;">
+<div style="color:#d72323;font-size:12px;letter-spacing:3px;">JSTYLES</div>
+<div style="font-size:28px;font-weight:700;color:#111;">
 NEW ORDER<br><span style="color:#d72323;">RECEIVED</span>
 </div>
 </td>
 </tr>
 
-<!-- CUSTOMER INFO -->
+<!-- CUSTOMER -->
 <tr>
-<td style="background:#ffffff;padding:24px 32px;">
-<div style="font-size:11px;letter-spacing:3px;color:#d72323;margin-bottom:14px;">
-CUSTOMER INFORMATION
-</div>
-
+<td style="padding:24px;">
 <table width="100%">
-<tr>
-<td style="padding:6px 0;color:#666;width:140px;">Full Name</td>
-<td style="padding:6px 0;color:#111;">${fname} ${lname}</td>
-</tr>
-
-<tr>
-<td style="padding:6px 0;color:#666;">Email</td>
-<td style="padding:6px 0;">
-<a href="mailto:${email}" style="color:#dtd>
-<td style="padding:6px 0;color:#111;">${now}</td>
-</tr>
-
+<tr><td style="color:#666;">Name</td><td>${fname} ${lname}</td></tr>
+<tr><td style="color:#666;">Email</td><td><a href="mailto:${email}" style="color:#d72323;">${email}</a></td></tr>
+<tr><td style="color:#666;">Date</td><td>${now}</td></tr>
 ${notesRow}
 </table>
 </td>
 </tr>
 
-<!-- DIVIDER -->
+<!-- ORDER DETAILS -->
 <tr>
-<td style="background:#d72323;height:2px;"></td>
-</tr>
-
-<!-- ORDER -->
-<tr>
-<td style="padding:24px 32px;background:#ffffff;">
-<div style="font-size:11px;letter-spacing:3px;color:#d72323;margin-bottom:18px;">
-ORDER DETAILS
-</div>
-
+<td style="padding:24px;">
 ${productSections}
 </td>
 </tr>
 
-<!-- TOTAL -->
+<!-- ✅ GRAND TOTAL -->
 <tr>
-<td style="padding:20px 32px;background:#fafafa;border-top:1px solid #ddd;">
+<td style="padding:24px;background:#fafafa;border-top:1px solid #ddd;">
+
 <table width="100%">
 <tr>
-<td style="color:#666;font-size:12px;">GRAND TOTAL</td>
+<td style="color:#666;">TOTAL ITEMS</td>
+<td style="text-align:right;font-weight:700;">${grandTotal}</td>
+</tr>
+
+<tr>
+<td style="color:#666;padding-top:6px;">TOTAL COST</td>
 <td style="text-align:right;">
-<span style="background:#d72323;color:#fff;font-size:20px;font-weight:700;padding:6px 18px;border-radius:4px;">
-${grandTotal} ITEMS
+<span style="background:#d72323;color:#fff;font-size:20px;font-weight:700;padding:6px 16px;border-radius:4px;">
+$${grandTotalCost}
 </span>
 </td>
 </tr>
 </table>
+
 </td>
 </tr>
 
 <!-- FOOTER -->
 <tr>
-<td style="padding:20px;text-align:center;">
-<p style="color:#777;font-size:12px;margin:0;">
+<td style="text-align:center;padding:18px;color:#777;font-size:12px;">
 Submitted via jStyles order form
-</p>
-<p style="margin-top:6px;">
-<a href="mailto:${email}" style="color:#d72323;font-size:/table>
+</td>
+</tr>
+
+</table>
 
 </td>
 </tr>
@@ -789,7 +818,63 @@ Submitted via jStyles order form
 </body>
 </html>`;
 }
+function buildCustomerEmail(fname, lname, email, notes, orderRows, grandTotal) {
 
+function getPrice(name) {
+  if (name.includes("Hoodie")) return 50;
+  if (name.includes("Sideline Tee")) return 25;
+  if (name.includes("Tank")) return 25;
+  if (name.includes("Ball Cap")) return 25;
+  if (name.includes("Quarter-Zip")) return 30;
+  return 0;
+}
+
+let totalCost = 0;
+
+const itemsHTML = orderRows.map(({ name, items, subtotal }) => {
+
+  const price = getPrice(name);
+  const sectionTotal = subtotal * price;
+  totalCost += sectionTotal;
+
+  const rows = items.map(({ size, qty }) => `
+  <tr>
+    <td style="padding:6px 0;">${size}</td>
+    <td style="text-align:right;">×${qty}</td>
+  </tr>`).join("");
+
+  return `
+  <div style="margin-bottom:16px;">
+    <strong>${name}</strong><br/>
+    ${rows}
+    <div style="text-align:right;font-weight:bold;color:#d72323;">
+      $${sectionTotal}
+    </div>
+  </div>`;
+}).join("");
+
+return `
+<html>
+<body style="font-family:Arial;padding:20px;background:#fff;">
+
+<h2 style="color:#d72323;">Order Confirmation</h2>
+
+<p>Hi ${fname},</p>
+<p>Thanks for your order! Here’s your summary:</p>
+
+${itemsHTML}
+
+<hr/>
+
+<p><strong>Total Items:</strong> ${grandTotal}</p>
+<p><strong>Total Cost:</strong> <span style="color:#d72323;">$${totalCost}</span></p>
+
+<p style="margin-top:20px;">We’ll be in touch soon.</p>
+
+</body>
+</html>
+`;
+}
 
   /* ════════════ SUBMIT ════════════ */
   async function submitOrder() {
@@ -838,14 +923,26 @@ Submitted via jStyles order form
 
     try {
       const htmlBody = buildEmailHTML(fname, lname, email, notes, orderRows, grandTotal);
+      const adminHTML = buildEmailHTML(fname, lname, email, notes, orderRows, grandTotal);
+      const customerHTML = buildCustomerEmail(fname, lname, email, notes, orderRows, grandTotal);
 
-      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-        subject:   `New jStyles Order — ${fname} ${lname}`,
-        html_body: htmlBody,
-        to_email:  "scottyjamieson29@gmail.com",
-        from_name: `${fname} ${lname}`,
-        reply_to:  email,
-      });
+// ✅ Send to YOU
+await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+  subject: `New jStyles Order — ${fname} ${lname}`,
+  html_body: adminHTML,
+  to_email: "scottyjamieson29@gmail.com",
+  from_name: `${fname} ${lname}`,
+  reply_to: email
+});
+
+// ✅ Send receipt to CUSTOMER
+await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+  subject: "Your jStyles Order Confirmation",
+  html_body: customerHTML,
+  to_email: email,
+  from_name: "jStyles",
+  reply_to: "scottyjamieson29@gmail.com"
+});
 
       showToast("✓ Order sent successfully!");
       document.getElementById("responseForm") && document.getElementById("responseForm").reset();
