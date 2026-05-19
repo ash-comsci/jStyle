@@ -9,9 +9,9 @@
     :root {
       --black:   #0a0a0a;
       --dark:    #0f0f0f;
-      --card:    #151515;
-      --card2:   #1b1b1b;
-      --border:  #262626;
+      --card:    #1e1e1e;
+      --card2:   #242424;
+      --border:  #333333;
       --red:     #d72323;
       --red-lo:  rgba(215,35,35,0.12);
       --red-dim: #8b1515;
@@ -26,7 +26,12 @@
     html { scroll-behavior: smooth; }
 
     body {
-      background: var(--black);
+      background:
+        radial-gradient(ellipse 140% 45% at 50% 0%,   #b8b8b8 0%, #787878 20%, transparent 50%),
+        radial-gradient(ellipse 80%  40% at 15%  50%,  rgba(160,160,160,0.22) 0%, transparent 55%),
+        radial-gradient(ellipse 80%  40% at 85%  50%,  rgba(160,160,160,0.22) 0%, transparent 55%),
+        radial-gradient(ellipse 110% 45% at 50% 100%,  #9b0f0f 0%, #5c0808 30%, transparent 60%),
+        linear-gradient(170deg, #4a4a4a 0%, #252525 30%, #181818 52%, #2c0909 75%, #450c0c 100%);
       color: var(--white);
       font-family: 'DM Sans', sans-serif;
       font-weight: 300;
@@ -44,8 +49,7 @@
       position: fixed;
       inset: 0;
       background:
-        radial-gradient(ellipse 70% 40% at 50% 0%, rgba(215,35,35,0.14) 0%, transparent 55%),
-        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.018) 39px, rgba(255,255,255,0.018) 40px);
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.022) 39px, rgba(255,255,255,0.022) 40px);
       pointer-events: none;
       z-index: 0;
     }
@@ -76,7 +80,7 @@
     .header p {
       margin-top: 16px;
       font-size: 13.5px;
-      color: var(--muted);
+      color: var(--red);
       max-width: 400px;
       margin-left: auto;
       margin-right: auto;
@@ -166,7 +170,7 @@
       user-select: none;
       transition: background .2s;
     }
-    .product-header:hover { background: #202020; }
+    .product-header:hover { background: #2a2a2a; }
 
     .product-header-left { display: flex; align-items: center; gap: 14px; }
 
@@ -181,7 +185,6 @@
       font-size: 15px;
       font-weight: 500;
       color: var(--white);
-      /* ← EDIT each product name in the HTML below */
     }
     .product-badge {
       font-family: 'Bebas Neue', sans-serif;
@@ -389,8 +392,8 @@
 
   <!-- ══ HEADER ══ -->
   <div class="header">
-    <span class="eyebrow"><h3>jSTYLES ORDER FORM</h3></span>   <!-- ← edit -->
-    <h1>BUILD YOUR<br/><span>ORDER</span></h1>     <!-- ← edit -->
+    <span class="eyebrow"><h3>jSTYLES ORDER FORM</h3></span>
+    <h1>BUILD YOUR<br/><span>ORDER</span></h1>
     <p>Select the quantity of each size you need. Only sizes with a quantity above zero will appear on your order.</p>
     <div class="rule"></div>
   </div>
@@ -419,8 +422,6 @@
   </div>
 
   <!-- ══ PRODUCT CARDS ══ -->
-  <!-- To customize: change the data-product attribute and the .product-name text -->
-
   <div class="products-wrap">
 
     <!-- ── Product 1 ── -->
@@ -428,20 +429,16 @@
       <div class="product-header" onclick="toggleCard(this)">
         <div class="product-header-left">
           <span class="product-num">01</span>
-          <span class="product-name">Pullover Hoodie</span>  <!-- ← EDIT -->
+          <span class="product-name">Pullover Hoodie</span>
           <span class="product-badge">ITEMS SELECTED</span>
         </div>
         <span class="product-chevron">›</span>
       </div>
       <div class="product-body">
         <div class="size-group-label">YOUTH SIZES</div>
-        <div class="size-grid" data-group="youth">
-          <!-- sizes injected by JS -->
-        </div>
+        <div class="size-grid" data-group="youth"></div>
         <div class="size-group-label">ADULT SIZES</div>
-        <div class="size-grid" data-group="adult">
-          <!-- sizes injected by JS -->
-        </div>
+        <div class="size-grid" data-group="adult"></div>
       </div>
     </div>
 
@@ -450,7 +447,7 @@
       <div class="product-header" onclick="toggleCard(this)">
         <div class="product-header-left">
           <span class="product-num">02</span>
-          <span class="product-name">Sideline Tee</span>   <!-- ← EDIT -->
+          <span class="product-name">Sideline Tee</span>
           <span class="product-badge">ITEMS SELECTED</span>
         </div>
         <span class="product-chevron">›</span>
@@ -468,7 +465,7 @@
       <div class="product-header" onclick="toggleCard(this)">
         <div class="product-header-left">
           <span class="product-num">03</span>
-          <span class="product-name">WOMENS Tank Top</span>  <!-- ← EDIT -->
+          <span class="product-name">WOMENS Tank Top</span>
           <span class="product-badge">ITEMS SELECTED</span>
         </div>
         <span class="product-chevron">›</span>
@@ -486,7 +483,7 @@
       <div class="product-header" onclick="toggleCard(this)">
         <div class="product-header-left">
           <span class="product-num">04</span>
-          <span class="product-name">MENS Tank Top</span>   <!-- ← EDIT -->
+          <span class="product-name">MENS Tank Top</span>
           <span class="product-badge">ITEMS SELECTED</span>
         </div>
         <span class="product-chevron">›</span>
@@ -504,7 +501,7 @@
       <div class="product-header" onclick="toggleCard(this)">
         <div class="product-header-left">
           <span class="product-num">05</span>
-          <span class="product-name">Ball Cap</span>  <!-- ← EDIT -->
+          <span class="product-name">Ball Cap</span>
           <span class="product-badge">ITEMS SELECTED</span>
         </div>
         <span class="product-chevron">›</span>
@@ -522,7 +519,7 @@
       <div class="product-header" onclick="toggleCard(this)">
         <div class="product-header-left">
           <span class="product-num">06</span>
-          <span class="product-name">Quarter-Zip</span>  <!-- ← EDIT -->
+          <span class="product-name">Quarter-Zip</span>
           <span class="product-badge">ITEMS SELECTED</span>
         </div>
         <span class="product-chevron">›</span>
@@ -553,8 +550,6 @@
 
   /* ════════════ BUILD COUNTERS ════════════ */
   document.querySelectorAll(".product-card").forEach((card, cardIdx) => {
-    const pid = card.dataset.product;
-
     card.querySelectorAll(".size-grid").forEach(grid => {
       const sizes = grid.dataset.group === "youth" ? YOUTH_SIZES : ADULT_SIZES;
       sizes.forEach(size => {
@@ -572,13 +567,13 @@
       });
     });
 
-    // open first card by default
+    // open all cards by default
     const body = card.querySelector(".product-body");
     body.style.maxHeight = body.scrollHeight + "px";
   });
 
   /* ════════════ COUNTER LOGIC ════════════ */
-  const counts = {};   // key → number
+  const counts = {};
 
   function adjust(id, delta) {
     const cur = counts[id] || 0;
@@ -596,7 +591,6 @@
 
   function refreshBadges() {
     document.querySelectorAll(".product-card").forEach((card, cardIdx) => {
-      const pid  = card.dataset.product;
       const badge = card.querySelector(".product-badge");
       const total = cardTotal(cardIdx);
       badge.textContent = `${total} SELECTED`;
@@ -651,13 +645,11 @@
       return;
     }
 
-    // ── Build email subject ──
-    const subject = `New jStyle Order — ${fname} ${lname}`;
+    const subject = `New jStyles Order — ${fname} ${lname}`;
 
-    // ── Build email body ──
-    const divider  = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━";
-    const thin     = "────────────────────────────────────────";
-    const now      = new Date().toLocaleString("en-CA", { dateStyle:"long", timeStyle:"short" });
+    const divider = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━";
+    const thin    = "────────────────────────────────────────";
+    const now     = new Date().toLocaleString("en-CA", { dateStyle:"long", timeStyle:"short" });
 
     let body = "";
     body += `ORDER RECEIVED\n`;
@@ -665,7 +657,7 @@
     body += `Date Submitted : ${now}\n`;
     body += `Customer Name  : ${fname} ${lname}\n`;
     body += `Customer Email : ${email}\n`;
-    if (notes) body += `Notes          : ${notes}\n`;
+    if (notes) body += `Name for Back  : ${notes}\n`;
     body += `\n${divider}\n`;
     body += `ORDER DETAILS\n`;
     body += `${divider}\n\n`;
@@ -676,14 +668,13 @@
       const productName = card.dataset.product;
       const productItems = [];
 
-      // Collect all sizes with count > 0 for this product
       [...YOUTH_SIZES, ...ADULT_SIZES].forEach(size => {
         const key = `${cardIdx}_${size.replace(/\s/g,"_")}`;
         const qty = counts[key] || 0;
         if (qty > 0) productItems.push({ size, qty });
       });
 
-      if (productItems.length === 0) return; // skip empty products
+      if (productItems.length === 0) return;
 
       const productTotal = productItems.reduce((s,r) => s + r.qty, 0);
       grandTotal += productTotal;
@@ -701,10 +692,9 @@
     body += `${divider}\n`;
     body += `GRAND TOTAL    :  ${grandTotal} item${grandTotal !== 1 ? "s" : ""}\n`;
     body += `${divider}\n\n`;
-    body += `This order was submitted via the online order form.\n`;
+    body += `This order was submitted via the jStyles online order form.\n`;
     body += `Please reply to ${email} to confirm the order.\n`;
 
-    // ── Open mailto ──
     const mailto = `mailto:scottyjamieson29@gmail.com`
       + `?subject=${encodeURIComponent(subject)}`
       + `&body=${encodeURIComponent(body)}`;
