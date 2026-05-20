@@ -575,7 +575,7 @@
      2. Add an Email Service (Gmail recommended) → copy the Service ID
      3. Create a Template — paste ONLY this in the template body:
             {{{html_body}}}
-        Set "To Email" = scottyjamieson29@gmail.com
+        Set "To Email" = jstyles.soccer@gmail.com
         Set "Subject"  = {{subject}}
         → Copy the Template ID
      4. Go to Account → API Keys → copy your Public Key
@@ -930,7 +930,7 @@ ${itemsHTML}
 await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
   subject: `New jStyles Order — ${fname} ${lname}`,
   html_body: adminHTML,
-  to_email: "scottyjamieson29@gmail.com",
+  to_email: "jstyles.soccer@gmail.com",
   from_name: `${fname} ${lname}`,
   reply_to: email
 });
@@ -941,7 +941,7 @@ await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
   html_body: customerHTML,
   to_email: email,
   from_name: "jStyles",
-  reply_to: "scottyjamieson29@gmail.com"
+  reply_to: "jstyles.soccer@gmail.com"
 });
 
       showToast("✓ Order sent successfully!");
